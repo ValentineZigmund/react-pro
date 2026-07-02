@@ -1,0 +1,8 @@
+.TaskList {
+  width: 50%;
+}
+
+.TaskList li {
+  cursor: pointer;
+  margin: 15px 0;
+}

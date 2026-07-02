@@ -1,0 +1,14 @@
+.FilterButton {
+  background-color: darkslategray;
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 5px 10px;
+  width: 300px;
+}
+
+.FilterButton select {
+  background-color: darkslategray;
+}
