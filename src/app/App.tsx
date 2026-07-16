@@ -1,8 +1,11 @@
 import { TasksPage } from 'pages/Tasks'
 import { createRoot } from 'react-dom/client'
+import { Provider } from 'react-redux'
+import { store } from './store'
+
 
 createRoot(document.getElementById('root')!).render(
-  <div>
+  <Provider store={store}>
     <TasksPage />
-  </div>
+  </Provider>
 )

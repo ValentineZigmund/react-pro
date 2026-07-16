@@ -1,5 +1,6 @@
+import { useGetTasksQuery } from 'entities/task/api/tasksApi';
 import type { Task } from 'entities/task/model/types';
-import { useMemo, useCallback, useState } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 export const FILTER = {
   all: 'all',
@@ -7,28 +8,34 @@ export const FILTER = {
   incomplete: 'incomplete'
 } as const;
 
-export type Filter = keyof typeof FILTER;
+export const API = {
+  tasksApi: 'tasksApi'
+} as const;
 
-export const TASKS: Task[] = Array.from({ length: 1000 }, (_, index) =>
-  ({ id: String(index), title: String(index), completed: Boolean(index % 2) }))
+export type Filter = keyof typeof FILTER;
 
 const statusToBool = (status: Filter) =>
   status === FILTER.completed
 
-export const useTasks = (initial: Task[] = TASKS) => {
+export const useTasks = () => {
 
-  console.log('render')
-
-  const [initialTasks, setInitialTasks] = useState(initial)
+  const { data = [] } = useGetTasksQuery()
+  const [remoteTasks, setRemotelTasks] = useState<Task[]>([])
   const [filter, setFilter] = useState<Filter>(FILTER.all)
 
   const removeTask = useCallback((id: string) =>
-    setInitialTasks(initialTasks.filter(task => task.id !== id)), [initialTasks])
+    setRemotelTasks(remoteTasks.filter(task => task.id !== id)), [remoteTasks])
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (data.length) setRemotelTasks(data)
+  }, [data])
+
 
   const tasks = useMemo(() => {
-    if (filter === FILTER.all) return initialTasks
-    return initialTasks.filter((task) => task.completed === statusToBool(filter))
-  }, [initialTasks, filter])
+    if (filter === FILTER.all) return remoteTasks
+    return remoteTasks.filter((task) => task.completed === statusToBool(filter))
+  }, [remoteTasks, filter])
 
   return { tasks, setFilter, removeTask }
 }
